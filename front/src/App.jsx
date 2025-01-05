@@ -2,21 +2,31 @@ import { useState } from "react";
 import "./App.css";
 
 function App() {
-  const [statistics, setStatistics] = useState({
-    date: "",
-    weight: "",
-    sleepHours: "",
-    alcoholConsumption: "",
-  });
+  const [statistics, setStatistics] = useState([]);
+  const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
+  const [weight, setWeight] = useState(0);
+  const [sleepHours, setSleepHours] = useState(0);
+  const [alcoholConsumption, setAlcoholConsumption] = useState(0);
   const addStatistics = () => {
+    const newStatistic = {
+      date: date,
+      weight: weight,
+      sleepHours: sleepHours,
+      alcoholConsumption: alcoholConsumption
+    };
+
+    const index = statistics.findIndex(stat => stat.date === date);
+    if (index !== -1) {
+      const updatedStatistics = [...statistics];
+      updatedStatistics[index] = newStatistic;
+      setStatistics(updatedStatistics);
+    } else {
+      setStatistics([...statistics, newStatistic]);
+    }
+    console.log(statistics);
+
   };
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setStatistics((prevStats) => ({
-      ...prevStats,
-      [name]: value,
-    }));
-  };
+
   return (
     <div className="App">
       <h1>InputArea</h1>
@@ -26,9 +36,10 @@ function App() {
           <input
             type="date"
             name="date"
-            value={statistics.data}
-            onChange={handleChange}
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
           />
+          {date}
         </div>
         <div>
           <label>Weight (kg):</label>
@@ -36,9 +47,10 @@ function App() {
             type="number"
             step="0.1"
             name="weight"
-            value={statistics.weight}
-            onChange={handleChange}
+            value={weight}
+            onChange={(e) => setWeight(e.target.value)}
           />
+          {weight}
         </div>
         <div>
           <label>Sleep Hours:</label>
@@ -46,9 +58,10 @@ function App() {
             type="number"
             step="0.1"
             name="sleepHours"
-            value={statistics.sleepHours}
-            onChange={handleChange}
+            value={sleepHours}
+            onChange={(e) => setSleepHours(e.target.value)}
           />
+          {sleepHours}
         </div>
         <div>
           <label>Alcohol Consumption (Beer 350ml cans):</label>
@@ -56,9 +69,10 @@ function App() {
             type="number"
             step="0.1"
             name="alcoholConsumption"
-            value={statistics.alcoholConsumption}
-            onChange={handleChange}
+            value={alcoholConsumption}
+            onChange={(e) => setAlcoholConsumption(e.target.value)}
           />
+          {alcoholConsumption}
         </div>
         <button type="button" onClick={addStatistics}>
           Add Statistics
